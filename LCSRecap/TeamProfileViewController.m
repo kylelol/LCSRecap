@@ -177,7 +177,6 @@
     _animationController.selectedFrame = frame;
     selectedPlayer = [[self.teamDictionary objectForKey:@"players"] objectForKey:player];
     [self performSegueWithIdentifier:@"ProfileVC" sender:nil];
-
 }
 
 - (id<UIViewControllerAnimatedTransitioning>) animationControllerForPresentedController:
