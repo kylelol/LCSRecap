@@ -15,6 +15,8 @@
 #import "TeamsModel.h"
 #import "TeamProfileViewController.h"
 
+#import "LCSRecapUtilities.h"
+
 @interface ViewController () <TeamOverallStatsViewDelegate, TeamPlayerStatsContainerViewDelegate, GameStatsModelDelegate, TeamsModelDelegate>
 
 @property (nonatomic, strong) TeamOverallStatsView *redTeamOverallStatsView;
@@ -55,6 +57,19 @@
     _hideStats = false;
     _redTeamStats = false;
     _blueTeamStats = false;
+    
+    [[LCSRecapUtilities sharedUtilities] requestGameStatsForTeam:self.redTeamName andTeam:self.blueTeamName completion:^(BOOL success, NSError *error, NSDictionary *events) {
+        
+        if (success)
+        {
+            NSLog(@"%@", events);
+        }
+        else
+        {
+            NSLog(@"%@", error);
+        }
+        
+    }];
     
     
     // For future reference, these models might need to be reworked.
