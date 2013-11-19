@@ -7,18 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GameStatsRetriever.h"
 
-@protocol GameStatsModelDelegate <NSObject>
+@interface GameStatsModel : NSObject
 
--(void)recievedGameStatsFromRetriever;
+@property (nonatomic, strong) NSDictionary *redTeamStatsDictionary;
+@property (nonatomic, strong) NSDictionary *blueTeamStatsDictioanry;
 
-@end
+@property (nonatomic, strong) NSString *redTeamName;
+@property (nonatomic, strong) NSString *blueTeamName;
 
-@interface GameStatsModel : NSObject <GameStatsRetrieverDelegate>
-
-@property (strong, nonatomic) NSDictionary *gameStatsDictionary;
-
-@property (nonatomic, strong) id<GameStatsModelDelegate> delegate;
-
+-(id)initWithGameStats:(NSDictionary*)gameStats
+            forTeamOne:(NSString*)teamOne
+            andTeamTwo: (NSString*)teamTwo;
 @end

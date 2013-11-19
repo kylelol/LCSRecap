@@ -8,20 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GameStatsRetriever.h"
+@interface TeamsModel : NSObject
 
-@protocol TeamsModelDelegate <NSObject>
+@property (nonatomic, strong) NSDictionary *redTeamDictionary;
+@property (nonatomic, strong) NSDictionary *blueTeamDictionary;
 
--(void)didRecieveTeams;
-
-@end
-
-@interface TeamsModel : NSObject <GameStatsRetrieverDelegate>
-
-@property (nonatomic, strong) NSDictionary *teamOneDictionary;
-@property (nonatomic, strong) NSDictionary *teamTwoDictionary;
-
-@property (nonatomic, strong) id<TeamsModelDelegate> delegate;
-
+-(id)initWithTeamDictionary:(NSDictionary *)dictionary redteamName:(NSString*)redTeam blueTeamName:(NSString*)blueTeam;
 
 @end

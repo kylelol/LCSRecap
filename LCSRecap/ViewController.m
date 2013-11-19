@@ -17,7 +17,7 @@
 
 #import "LCSRecapUtilities.h"
 
-@interface ViewController () <TeamOverallStatsViewDelegate, TeamPlayerStatsContainerViewDelegate, GameStatsModelDelegate, TeamsModelDelegate>
+@interface ViewController () <TeamOverallStatsViewDelegate, TeamPlayerStatsContainerViewDelegate>
 
 @property (nonatomic, strong) TeamOverallStatsView *redTeamOverallStatsView;
 @property (nonatomic, strong) TeamOverallStatsView *blueTeamOverallStatsView;
@@ -58,11 +58,15 @@
     _redTeamStats = false;
     _blueTeamStats = false;
     
-    [[LCSRecapUtilities sharedUtilities] requestGameStatsForTeam:self.redTeamName andTeam:self.blueTeamName completion:^(BOOL success, NSError *error, NSDictionary *events) {
+    [[LCSRecapUtilities sharedUtilities] requestGameStatsForTeam:self.redTeamName andTeam:self.blueTeamName completion:^(BOOL success, NSError *error, NSDictionary *gameStats) {
         
         if (success)
         {
-            NSLog(@"%@", events);
+            self.gameStats = [[GameStatsModel alloc] initWithGameStats:gameStats
+                                                            forTeamOne:self.redTeamName
+                                                            andTeamTwo:self.blueTeamName];
+            
+            [self populateGameStats];
         }
         else
         {
@@ -71,19 +75,18 @@
         
     }];
     
-    
-    // For future reference, these models might need to be reworked.
-    // Simple delegation pattern to pass the information
-    // Mainly get the retriever out of the vc and into the model.
-    GameStatsRetriever *stats = [[GameStatsRetriever alloc] init];
-    self.gameStats = [[GameStatsModel alloc] init];
-    self.teamModel = [[TeamsModel alloc] init];
-    stats.teamDelegate = self.teamModel;
-    stats.delegate = self.gameStats;
-    self.gameStats.delegate = self;
-    self.teamModel.delegate = self;
-    [stats retrieveGameStatsForTeams:[NSString stringWithFormat:@"%@vs%@", self.redTeamName, self.blueTeamName]];
-    [stats retrieveTeamPlayersForTeams:[NSString stringWithFormat:@"%@vs%@", self.redTeamName, self.blueTeamName]];
+    [[LCSRecapUtilities sharedUtilities] requestTeamsWithCompletion:^(BOOL success, NSError *error, NSDictionary *teams) {
+        if (success)
+        {
+            self.teamModel = [[TeamsModel alloc] initWithTeamDictionary:teams redteamName:self.gameStats.redTeamName blueTeamName:self.gameStats.blueTeamName];
+            
+            [self updateTeamNames];
+        }
+        else
+        {
+            NSLog(@"%@", error);
+        }
+    }];
     
     // Simple logic to determine the text of the hide stats bar button item.
     if (!_hideStats)
@@ -137,14 +140,14 @@
         NSDictionary *teamDict;
         if (self.redTeamContainerView.wasTapped)
         {
-            teamName = self.redTeamName;
-            teamDict = self.teamModel.teamOneDictionary;
+            teamName = self.gameStats.redTeamName;
+            teamDict = self.teamModel.redTeamDictionary;
             self.redTeamContainerView.wasTapped = NO;
         }
         else
         {
-            teamName = self.blueTeamName;
-            teamDict = self.teamModel.teamTwoDictionary;
+            teamName = self.gameStats.blueTeamName;
+            teamDict = self.teamModel.blueTeamDictionary;
             self.blueTeamContainerView.wasTapped = NO;
         }
         
@@ -402,21 +405,8 @@
 
 -(void)populateGameStats
 {
-    NSDictionary *redTeamStats;
-    NSDictionary *blueTeamStats;
-    
-    if ([[[self.gameStats.gameStatsDictionary objectForKey:self.redTeamName] objectForKey:@"side"] isEqualToString:@"red"])
-    {
-       redTeamStats = [self.gameStats.gameStatsDictionary objectForKey:self.redTeamName];
-        blueTeamStats = [self.gameStats.gameStatsDictionary objectForKey:self.blueTeamName];
-
-    }
-    else
-    {
-        redTeamStats = [self.gameStats.gameStatsDictionary objectForKey:self.blueTeamName];
-        blueTeamStats = [self.gameStats.gameStatsDictionary objectForKey:self.redTeamName];
-        
-    }
+    NSDictionary *redTeamStats = self.gameStats.redTeamStatsDictionary;
+    NSDictionary *blueTeamStats = self.gameStats.blueTeamStatsDictioanry;
     
     self.redTeamContainerView.teamBanOne.image = [UIImage imageNamed:[redTeamStats objectForKey:@"ban-one"]];
     self.redTeamContainerView.teamBanTwo.image = [UIImage imageNamed:[redTeamStats objectForKey:@"ban-two"]];
@@ -619,32 +609,31 @@
 
 -(void)updateTeamNames
 {
-    self.redTeamContainerView.teamNameLabel.text = [self.teamModel.teamOneDictionary objectForKey:@"team-name"];
+    self.redTeamContainerView.teamNameLabel.text = [self.teamModel.redTeamDictionary objectForKey:@"team-name"];
     self.redTeamContainerView.teamNameLabel.textColor = [UIColor redColor];
-    self.redTeamContainerView.topLaner.playerNameLabel.text = [[self.teamModel.teamOneDictionary objectForKey:@"players"]
+    self.redTeamContainerView.topLaner.playerNameLabel.text = [[self.teamModel.redTeamDictionary objectForKey:@"players"]
                                                                                                     objectForKey:@"top"];
-    self.redTeamContainerView.jungleLaner.playerNameLabel.text = [[self.teamModel.teamOneDictionary objectForKey:@"players"]
+    self.redTeamContainerView.jungleLaner.playerNameLabel.text = [[self.teamModel.redTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"jungle"];
-    self.redTeamContainerView.midLaner.playerNameLabel.text = [[self.teamModel.teamOneDictionary objectForKey:@"players"]
+    self.redTeamContainerView.midLaner.playerNameLabel.text = [[self.teamModel.redTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"mid"];
-    self.redTeamContainerView.adcLaner.playerNameLabel.text = [[self.teamModel.teamOneDictionary objectForKey:@"players"]
+    self.redTeamContainerView.adcLaner.playerNameLabel.text = [[self.teamModel.redTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"adc"];
-    self.redTeamContainerView.supportLaner.playerNameLabel.text = [[self.teamModel.teamOneDictionary objectForKey:@"players"]
+    self.redTeamContainerView.supportLaner.playerNameLabel.text = [[self.teamModel.redTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"support"];
     
     
-    self.blueTeamContainerView.teamNameLabel.text = [self.teamModel.teamTwoDictionary objectForKey:@"team-name"];
+    self.blueTeamContainerView.teamNameLabel.text = [self.teamModel.blueTeamDictionary objectForKey:@"team-name"];
     self.blueTeamContainerView.teamNameLabel.textColor = [UIColor blueColor];
-    self.blueTeamContainerView.topLaner.playerNameLabel.text = [[self.teamModel.teamTwoDictionary objectForKey:@"players"]
+    self.blueTeamContainerView.topLaner.playerNameLabel.text = [[self.teamModel.blueTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"top"];
-    self.blueTeamContainerView.jungleLaner.playerNameLabel.text = [[self.teamModel.teamTwoDictionary objectForKey:@"players"]
+    self.blueTeamContainerView.jungleLaner.playerNameLabel.text = [[self.teamModel.blueTeamDictionary objectForKey:@"players"]
                                                                   objectForKey:@"jungle"];
-    self.blueTeamContainerView.midLaner.playerNameLabel.text = [[self.teamModel.teamTwoDictionary objectForKey:@"players"]
+    self.blueTeamContainerView.midLaner.playerNameLabel.text = [[self.teamModel.blueTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"mid"];
-    self.blueTeamContainerView.adcLaner.playerNameLabel.text = [[self.teamModel.teamTwoDictionary objectForKey:@"players"]
+    self.blueTeamContainerView.adcLaner.playerNameLabel.text = [[self.teamModel.blueTeamDictionary objectForKey:@"players"]
                                                                objectForKey:@"adc"];
-    self.blueTeamContainerView.supportLaner.playerNameLabel.text = [[self.teamModel.teamTwoDictionary objectForKey:@"players"]
-                                                                   objectForKey:@"support"];
+    self.blueTeamContainerView.supportLaner.playerNameLabel.text = [[self.teamModel.blueTeamDictionary objectForKey:@"players"] objectForKey:@"support"];
 }
 
 #pragma mark TeamOverallStatsDelegate
@@ -683,29 +672,5 @@
     [self performSegueWithIdentifier:@"TeamProfileVC" sender:nil];
 }
 
-#pragma mark GameStatsRetrieverDelegate
--(void)recievedGameStatsFromRetriever
-{
-    [self populateGameStats];
-}
-
--(void)didRecieveTeams
-{
-    if (![[[self.gameStats.gameStatsDictionary objectForKey:self.redTeamName] objectForKey:@"side"] isEqualToString:@"red"])
-    {
-        NSDictionary * temp;
-        temp = self.teamModel.teamTwoDictionary;
-        self.teamModel.teamTwoDictionary = self.teamModel.teamOneDictionary;
-        self.teamModel.teamOneDictionary = [NSDictionary dictionaryWithDictionary:temp];
-        
-        NSString *tempString;
-        tempString = self.blueTeamName;
-        self.blueTeamName = self.redTeamName;
-        self.redTeamName = tempString;
-        
-    }
-    
-    [self updateTeamNames];
-}
 
 @end

@@ -10,14 +10,17 @@
 
 @implementation TeamsModel
 
--(void)didRetrieveTeams:(NSString *)teams dictionary:(NSDictionary *)dictionary
+-(id)initWithTeamDictionary:(NSDictionary *)dictionary redteamName:(NSString*)redTeam blueTeamName:(NSString*)blueTeam
 {
-    NSArray *components = [teams componentsSeparatedByString:@"vs"];
+    self = [super init];
     
-    self.teamOneDictionary = [dictionary objectForKey:components[0]];
-    self.teamTwoDictionary = [dictionary objectForKey:components[1]];
-        
-    [self.delegate didRecieveTeams];
+    if (self)
+    {
+        self.redTeamDictionary = [dictionary objectForKey:redTeam];
+        self.blueTeamDictionary = [dictionary objectForKey:blueTeam];
+    }
+    
+    return self;
 }
 
 @end

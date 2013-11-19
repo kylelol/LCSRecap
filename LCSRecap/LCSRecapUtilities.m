@@ -27,7 +27,7 @@
 
 -(void)requestGameStatsForTeam:(NSString*)teamOne
                        andTeam:(NSString*)teamTwo
-                    completion:(EventRequestCompletionBlock)completionBlock
+                    completion:(GameStatsRequestCompletionBlock)completionBlock
 {
     // The URL of the stats.
     NSURL *newJSONUrl = [NSURL URLWithString:@"http://www.lateknightcookies.com/test/NAGames"];
@@ -69,5 +69,38 @@
     
 }
 
+-(void)requestTeamsWithCompletion:(TeamRequestCompletionBlock)completionBlock
+{
+    // Create the URL
+    NSURL *newJSONUrl = [NSURL URLWithString:@"http://www.lateknightcookies.com/test/NATeams"];
+    
+    // Create the request
+    NSURLRequest *request = [NSURLRequest requestWithURL:newJSONUrl];
+    
+    // Create the operation
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]
+                                         initWithRequest:request];
+    
+    // Set the completion and failure blocks
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if (completionBlock)
+         {
+             completionBlock(YES, nil, [responseObject objectForKey:@"Teams"]);
+         }
+         
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+    {
+        if (completionBlock)
+        {
+            completionBlock(NO, error, nil);
+        }
+         
+     }];
+    
+    // Start the operation.
+    [operation start];
+    
+}
 
 @end

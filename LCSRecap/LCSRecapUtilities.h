@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^EventRequestCompletionBlock)(BOOL success, NSError *error, NSDictionary *events);
+typedef void (^GameStatsRequestCompletionBlock)(BOOL success, NSError *error, NSDictionary *gameStats);
+typedef void (^TeamRequestCompletionBlock)(BOOL success, NSError *error, NSDictionary *teams);
 
 @interface LCSRecapUtilities : NSObject
 
@@ -26,6 +27,13 @@ typedef void (^EventRequestCompletionBlock)(BOOL success, NSError *error, NSDict
 // TODO: Might need to add in extra paramter for the week.
 -(void)requestGameStatsForTeam:(NSString*)teamOne
                        andTeam:(NSString*)teamTwo
-                    completion:(EventRequestCompletionBlock)completionBlock;
+                    completion:(GameStatsRequestCompletionBlock)completionBlock;
+
+/**
+ *  Fetches a dictionary of all the teams
+ *
+ *  @param completionBlock A completion block with the dictionary of stats.
+ */
+-(void)requestTeamsWithCompletion:(TeamRequestCompletionBlock)completionBlock;
 
 @end

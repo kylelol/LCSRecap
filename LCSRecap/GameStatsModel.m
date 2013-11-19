@@ -10,12 +10,30 @@
 
 @implementation GameStatsModel
 
--(void)didRetrieveDictionary:(NSDictionary *)dict
+-(id)initWithGameStats:(NSDictionary*)gameStats forTeamOne:(NSString*)teamOne andTeamTwo: (NSString*)teamTwo
 {
-    self.gameStatsDictionary = dict;
-    [self.delegate recievedGameStatsFromRetriever];
+    
+    self = [super init];
+    
+    if (self)
+    {
+        if ( [[[gameStats objectForKey:teamOne] objectForKey:@"side"] isEqualToString:@"red"] )
+        {
+            self.redTeamName = teamOne;
+            self.blueTeamName = teamTwo;
+        }
+        else
+        {
+            self.redTeamName = teamTwo;
+            self.blueTeamName = teamOne;
+        }
+                
+        self.redTeamStatsDictionary = [gameStats objectForKey:self.redTeamName];
+        self.blueTeamStatsDictioanry = [gameStats objectForKey:self.blueTeamName];
+
+    }
+    
+    return self;
 }
-
-
 
 @end
