@@ -66,6 +66,10 @@
                                                             forTeamOne:self.redTeamName
                                                             andTeamTwo:self.blueTeamName];
             
+            self.teamModel = [[TeamsModel alloc] initWithTeamDictionary:self.teamsDictionary
+                                                            redteamName:self.gameStats.redTeamName
+                                                           blueTeamName:self.gameStats.blueTeamName];
+            [self updateTeamNames];
             [self populateGameStats];
         }
         else
@@ -73,19 +77,6 @@
             NSLog(@"%@", error);
         }
         
-    }];
-    
-    [[LCSRecapUtilities sharedUtilities] requestTeamsWithCompletion:^(BOOL success, NSError *error, NSDictionary *teams) {
-        if (success)
-        {
-            self.teamModel = [[TeamsModel alloc] initWithTeamDictionary:teams redteamName:self.gameStats.redTeamName blueTeamName:self.gameStats.blueTeamName];
-            
-            [self updateTeamNames];
-        }
-        else
-        {
-            NSLog(@"%@", error);
-        }
     }];
     
     // Simple logic to determine the text of the hide stats bar button item.
@@ -127,7 +118,6 @@
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    
 
 
 }

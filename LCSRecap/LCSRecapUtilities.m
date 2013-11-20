@@ -103,4 +103,40 @@
     
 }
 
+-(void)requestVideosFromYoutubeAPIForPlaylistID:(NSString *)playlistID
+                                     completion:(PlaylistVideoCompletionBlock)completionBlock
+{
+    
+    // Configure the URL of the playlist.
+    NSString *url = [NSString stringWithFormat:@"https://gdata.youtube.com/feeds/api/playlists/%@?v=2&alt=json", playlistID];
+    NSURL *playlistURL = [NSURL URLWithString:url];
+    
+    // Configure the request.
+    NSURLRequest *request = [NSURLRequest requestWithURL:playlistURL];
+    
+    // Get the request.
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]
+                                         initWithRequest:request];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         NSArray *arrray = [[responseObject objectForKey:@"feed"] objectForKey:@"entry"];
+         
+         if (completionBlock)
+         {
+             completionBlock(YES, nil, arrray);
+         }
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         //TODO: Implement Error
+         
+         if (completionBlock)
+         {
+             completionBlock(NO, error, nil);
+         }
+     }];
+    
+    //Start the request
+    [operation start];
+    
+}
+
 @end

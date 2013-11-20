@@ -18,4 +18,6 @@
 
 @property (strong, nonatomic) NSString *videoID;
 
+@property (strong, nonatomic) NSDictionary *teamsDictionary;
+
 @end

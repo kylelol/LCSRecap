@@ -10,6 +10,8 @@
 
 typedef void (^GameStatsRequestCompletionBlock)(BOOL success, NSError *error, NSDictionary *gameStats);
 typedef void (^TeamRequestCompletionBlock)(BOOL success, NSError *error, NSDictionary *teams);
+typedef void (^PlaylistVideoCompletionBlock)(BOOL success, NSError *error, NSArray *playlistVideos);
+
 
 @interface LCSRecapUtilities : NSObject
 
@@ -35,5 +37,15 @@ typedef void (^TeamRequestCompletionBlock)(BOOL success, NSError *error, NSDicti
  *  @param completionBlock A completion block with the dictionary of stats.
  */
 -(void)requestTeamsWithCompletion:(TeamRequestCompletionBlock)completionBlock;
+
+/**
+ *  Fetches the videos from a playlist using the YouTube API with the passed in playlistID
+ *
+ *  @param playlistID  The YouTube API ID of the playlist
+ *
+ *  @param completionBlock A completion block with the dictionary of stats.
+ */
+-(void)requestVideosFromYoutubeAPIForPlaylistID:(NSString *)playlistID
+                                     completion:(PlaylistVideoCompletionBlock)completionBlock;
 
 @end

@@ -18,6 +18,8 @@
     {
         self.redTeamDictionary = [dictionary objectForKey:redTeam];
         self.blueTeamDictionary = [dictionary objectForKey:blueTeam];
+        
+        NSLog(@"%@", self.redTeamDictionary);
     }
     
     return self;
