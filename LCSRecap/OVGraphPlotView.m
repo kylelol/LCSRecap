@@ -141,12 +141,7 @@
             int xpoint;
             int ypoint;
             xpoint=(spacebetweenpoints*i)+18;
-            
-            
-            
-            
-            
-            
+        
             ypoint=self.frame.size.height-(([point.yvalue floatValue]*yscale)+25);
           //  NSLog(@"x:%d",xpoint);
            // NSLog(@"y:%d",ypoint);
@@ -178,7 +173,24 @@
             yvalueoffset=0-30;
             
             OVGraphYIndicatorView *ind=[[OVGraphYIndicatorView alloc]initWithFrame:CGRectMake(xpoint-15, ypoint-30, 40, 28)];
-            ind.yValueLabel.text=[point.yvalue stringValue];
+            
+            // Added in the if statement for values of 1000 or greater to change the indicator label to have a 'K' instead of the whole number.
+            if ([point.yvalue floatValue] > 999)
+            {
+                float a = [point.yvalue floatValue];
+                float b = 1000;
+                float c = a/b;
+                
+                point.yvalue = [NSNumber numberWithFloat:c];
+                
+                ind.yValueLabel.text = [NSString stringWithFormat:@"%@K", [point.yvalue stringValue]];
+            }
+            else
+            {
+                ind.yValueLabel.text=[point.yvalue stringValue];
+
+            }
+            
             [self addSubview:ind];
            // [self drawYIndicatorAtPointX:xpoint-15 Y:ypoint-30];
             

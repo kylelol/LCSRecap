@@ -12,6 +12,7 @@
 
 @implementation TeamProfileCell
 
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -49,5 +50,6 @@
     [self.delegate shouldSegueToPlayerProfilePage:@"support" withInitialFrame:((UIButton*)sender).frame];
 
 }
+
 
 @end

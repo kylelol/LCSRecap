@@ -13,6 +13,6 @@
 @property (nonatomic, strong) NSArray *videoSourcesArray;
 @property (nonatomic, strong) NSArray *videoTitlesArray;
 
-+(id)videoPlaylistModelWithPlaylist:(NSArray *)playlist;
++(instancetype)videoPlaylistModelWithPlaylist:(NSArray *)playlist;
 
 @end

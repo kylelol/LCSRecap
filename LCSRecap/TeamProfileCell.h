@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class  OVGraphView;
+
 @protocol TeamProfileCellDelegate <NSObject>
 
 -(void)shouldSegueToPlayerProfilePage:(NSString*)player withInitialFrame:(CGRect)frame;
@@ -32,7 +34,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *supportThumbImageView;
 @property (weak, nonatomic) IBOutlet UILabel *supportNameLabel;
 @property (weak, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet UIView *GraphView;
 
 @property (strong, nonatomic) id<TeamProfileCellDelegate> delegate;
 

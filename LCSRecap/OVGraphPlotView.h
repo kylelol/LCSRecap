@@ -11,7 +11,8 @@
 #import "OVGraphYIndicatorView.h"
 @class OVPlotScrollView;
 @interface OVGraphPlotView : UIView <UIScrollViewDelegate>{
-    int yscale;
+    // Changed yscale to a float to support large numbers.
+    float yscale;
     int spacebetweenpoints;
     UIColor *opaquecolor;
     UIColor *lightercolor;

@@ -10,7 +10,6 @@
 #import "TeamPlayerStatsView.h"
 #import "TeamPlayerStatsContainerView.h"
 #import "TeamOverallStatsView.h"
-#import "GameStatsRetriever.h"
 #import "GameStatsModel.h"
 #import "TeamsModel.h"
 #import "TeamProfileViewController.h"

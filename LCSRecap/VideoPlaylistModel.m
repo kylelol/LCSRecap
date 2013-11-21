@@ -10,7 +10,7 @@
 
 @implementation VideoPlaylistModel
 
-+(id)videoPlaylistModelWithPlaylist:(NSArray *)playlist
++(instancetype)videoPlaylistModelWithPlaylist:(NSArray *)playlist
 {
     VideoPlaylistModel *model = [[VideoPlaylistModel alloc] init];
     

@@ -13,6 +13,6 @@
 @property (nonatomic, strong) NSDictionary *redTeamDictionary;
 @property (nonatomic, strong) NSDictionary *blueTeamDictionary;
 
--(id)initWithTeamDictionary:(NSDictionary *)dictionary redteamName:(NSString*)redTeam blueTeamName:(NSString*)blueTeam;
+-(instancetype)initWithTeamDictionary:(NSDictionary *)dictionary redteamName:(NSString*)redTeam blueTeamName:(NSString*)blueTeam;
 
 @end

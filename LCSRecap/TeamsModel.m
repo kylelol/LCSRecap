@@ -10,7 +10,7 @@
 
 @implementation TeamsModel
 
--(id)initWithTeamDictionary:(NSDictionary *)dictionary redteamName:(NSString*)redTeam blueTeamName:(NSString*)blueTeam
+-(instancetype)initWithTeamDictionary:(NSDictionary *)dictionary redteamName:(NSString*)redTeam blueTeamName:(NSString*)blueTeam
 {
     self = [super init];
     

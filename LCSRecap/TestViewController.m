@@ -29,23 +29,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    OVGraphView *graphview=[[OVGraphView alloc]initWithFrame:CGRectMake(0, 0, 200, 300) ContentSize:CGSizeMake(200, 300)];
-    
-    graphview.plotContainer.graphcolor=[UIColor colorWithRed:0.31 green:0.73 blue:0.78 alpha:1.0];
-
-    
-    //customizations go here
-    
-    [self.view addSubview:graphview];
-    
-    [graphview setPoints:@[[[OVGraphViewPoint alloc]initWithXLabel:@"today" YValue:@3.2 ],[[OVGraphViewPoint alloc]initWithXLabel:@"yesterday" YValue:@4 ],[[OVGraphViewPoint alloc]initWithXLabel:@"3" YValue:@6 ]]];
+    // We need a hostview, you can create one in IB (and create an outlet) or just do this:
 }
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 @end
